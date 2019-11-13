@@ -8,10 +8,13 @@ if (process.env.DEVELOP === 'true') {
 } else {
    socket = io();
 }
+
 socket.on('time', function (timeString) {
    console.log(timeString)
 });
+
 fetch('/api/test').then(res => res.json()).then(res => console.log(res))
+
 export const App: React.FC = () => {
    return (
       <div>A</div>
