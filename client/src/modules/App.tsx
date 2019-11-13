@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as io from 'socket.io-client';
 
 let socket;
-if (process.env.DEV === 'true') {
+if (process.env.DEVELOP === 'true') {
    socket = io(`http://localhost:${process.env.PORT}/`)
 } else {
    socket = io();
