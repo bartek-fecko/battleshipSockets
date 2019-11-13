@@ -9,7 +9,7 @@ module.exports = merge(common, {
     hot: true,
     proxy: {
       '/api': {
-        target: `http://[::1]:1648`,
+        target: `http://[::1]:1649`,
         secure: false,
         changeOrigin: true
       }
