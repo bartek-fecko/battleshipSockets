@@ -1,54 +1,25 @@
-// tslint:disable: object-literal-sort-keys
-import express, { Application, Response } from 'express';
-const morgan = require('morgan');
+'use strict';
 const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
+
+const express = require('express');
+const socketIO = require('socket.io');
 const path = require('path');
-const app: Application = express();
 dotenv.config({ path: './.env' });
-const http = require('http');
-const server = http.createServer(app);
-const io = require('socket.io').listen(server);
 
-// mongoose.connect(process.env.MONGO_DB_URI, {
-//   useFindAndModify: false,
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// })
-//   // tslint:disable: no-console
-//   .then(() => console.log('connected to db.'))
-//   .catch((err) => console.log(err));
+const PORT = process.env.PORT ;
 
-// mongoose.connection.on('error', (err: Error) => console.log('db error:' + err));
+const INDEX = path.join(__dirname, '../client/build/index.html');
 
-app.use(cors());
-app.use(morgan('dev'));
-app.use(express.json());
-app.use(cookieParser());
-app.use(morgan('dev'));
-app.use(express.static(path.join(__dirname, '../client/build')));
+const server = express()
+  .use(express.static(path.join(__dirname, '../client/build/')))
+  .use((req, res) => res.sendFile(INDEX) )
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-app.get('/api/test', (req, res) => {
-  res.send({ yepFromApi: true });
+const io = socketIO(server);
+
+io.on('connection', (socket) => {
+  console.log('Client connected');
+  socket.on('disconnect', () => console.log('Client disconnected'));
 });
 
-app.get('/*', (req, res: Response) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
-
-io.on('connection', function(socket){
-  socket.emit('yep', {yep: true})
-});
-
-const port = process.env.PORT;
-server.listen(port, () => {
-  // tslint:disable-next-line: no-console
-  console.log(`listening on port ${port}`);
-});
-
-server.timeout = 1000 * 15;
-if (process.env.NODE_ENV === 'development') {
-  server.timeout = 1000 * 20;
-}
+setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
