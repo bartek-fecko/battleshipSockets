@@ -11,7 +11,7 @@ const server = express()
     .use(cors())
     .use(express.static(path.join(__dirname, '../client/build/')))
     .use((req, res) => res.sendFile(INDEX))
-    .listen('1649', () => console.log(`Listening on ${PORT}`));
+    .listen(PORT, () => console.log(`Listening on ${PORT}`));
 const io = socketIO(server);
 io.on('connection', (socket) => {
     console.log('Client connected');

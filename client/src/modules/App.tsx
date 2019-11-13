@@ -2,8 +2,7 @@
 import * as React from 'react';
 import * as io from 'socket.io-client';
 
-// const uri = ;
-const socket = io(`https://127.0.0.1:1649`,{ transports: ['websocket'] });
+const socket = io();
 socket.on('time', function(timeString) {
    console.log(timeString)
  });
