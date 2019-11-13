@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as io from 'socket.io-client';
 
 // const uri = ;
-const socket = io(`https://127.0.0.1:${process.env.PORT}/`,{ transports: ['websocket'] });
+const socket = io(`https://127.0.0.1:1649`,{ transports: ['websocket'] });
 socket.on('time', function(timeString) {
    console.log(timeString)
  });
