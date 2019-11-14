@@ -1,4 +1,4 @@
-import { App } from '#/modules/App';
+import { App } from '#/App';
 import * as React from 'react';
 import { render } from 'react-dom';
 
