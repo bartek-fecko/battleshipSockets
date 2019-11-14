@@ -3,6 +3,8 @@ import * as io from 'socket.io-client';
 import './globals.sass';
 
 import Board from '#/game/Board/Board';
+import Chat from '#/game/Chat/Chat';
+import Nav from '#/game/Nav/Nav';
 
 let socket;
 if (process.env.DEVELOP === 'true') {
@@ -14,7 +16,9 @@ if (process.env.DEVELOP === 'true') {
 export const App: React.FC = () => {
    return (
       <>
+         <Nav />
          <Board />
+         <Chat />
       </>
    );
 };

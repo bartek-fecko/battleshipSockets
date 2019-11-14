@@ -11,7 +11,6 @@ import {
    EnemyPlayerBoardGrid,
    PlayerBoardGrid,
 } from './styled';
-import Nav from '../Nav/Nav';
 
 const Board: React.FC = () => {
    let lastElementPositionTransform: string;
@@ -52,66 +51,63 @@ const Board: React.FC = () => {
    };
 
    return (
-      <>
-         <Nav />
-         <Boards>
-            <BoardWrapper>
+      <Boards>
+         <BoardWrapper>
+            <CreateBoardCharacters
+               characters={C.rowNames}
+               top={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}
+               left={-30}
+               increaseBy="top"
+            />
+            <div>
                <CreateBoardCharacters
-                  characters={C.rowNames}
-                  top={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}
-                  left={-30}
-                  increaseBy="top"
+                  characters={C.colNames}
+                  left={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}
+                  top={-30}
+                  increaseBy="left"
                />
-               <div>
-                  <CreateBoardCharacters
-                     characters={C.colNames}
-                     left={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}
-                     top={-30}
-                     increaseBy="left"
-                  />
-                  <PlayerBoardGrid>
-                     <BoardGridLayout
-                        className="layout"
-                        // layout={gridLayout}
-                        compactType={null}
-                        preventCollision
-                        cols={C.colNames.length}
-                        rowHeight={C.BoardDimensions.BoxWidth}
-                        width={C.BoardDimensions.BoardWidth}
-                        margin={[0, 0]}
-                        maxRows={300}
-                        onDragStop={onDrop}
-                        onDragStart={onDragStart}
-                        onLayoutChange={onLayoutChange}
-                     >
-                        <Box key="a" data-grid={{ i: 'a', x: 0, y: 0, w: 1, h: 1, maxW: 1, maxH: 1 }} onClick={onClick} />
-                        <Box key="b" data-grid={{ i: 'a', x: 6, y: 2, w: 4, h: 2, maxW: 1, maxH: 1 }} onClick={onClick} />
-                        <Box key="c" data-grid={{ i: 'a', x: 4, y: 2, w: 2, h: 2, maxW: 2, maxH: 2 }} onClick={onClick} />
+               <PlayerBoardGrid>
+                  <BoardGridLayout
+                     className="layout"
+                     // layout={gridLayout}
+                     compactType={null}
+                     preventCollision
+                     cols={C.colNames.length}
+                     rowHeight={C.BoardDimensions.BoxWidth}
+                     width={C.BoardDimensions.BoardWidth}
+                     margin={[0, 0]}
+                     maxRows={300}
+                     onDragStop={onDrop}
+                     onDragStart={onDragStart}
+                     onLayoutChange={onLayoutChange}
+                  >
+                     <Box key="a" data-grid={{ i: 'a', x: 0, y: 0, w: 1, h: 1, maxW: 1, maxH: 1 }} onClick={onClick} />
+                     <Box key="b" data-grid={{ i: 'a', x: 6, y: 2, w: 4, h: 2, maxW: 1, maxH: 1 }} onClick={onClick} />
+                     <Box key="c" data-grid={{ i: 'a', x: 4, y: 2, w: 2, h: 2, maxW: 2, maxH: 2 }} onClick={onClick} />
 
-                     </BoardGridLayout>
-                     <CreateBoardBackground />
-                  </PlayerBoardGrid>
-               </div>
-            </BoardWrapper>
-            <BoardWrapper>
-               <CreateBoardCharacters
-                  characters={C.rowNames}
-                  top={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}
-                  left={-30}
-                  increaseBy="top"
-               />
-               <EnemyPlayerBoardGrid>
-                  <CreateBoardCharacters
-                     characters={C.colNames}
-                     left={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}
-                     top={-30}
-                     increaseBy="left"
-                  />
+                  </BoardGridLayout>
                   <CreateBoardBackground />
-               </EnemyPlayerBoardGrid>
-            </BoardWrapper>
-         </Boards>
-      </>
+               </PlayerBoardGrid>
+            </div>
+         </BoardWrapper>
+         <BoardWrapper>
+            <CreateBoardCharacters
+               characters={C.rowNames}
+               top={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}
+               left={-30}
+               increaseBy="top"
+            />
+            <EnemyPlayerBoardGrid>
+               <CreateBoardCharacters
+                  characters={C.colNames}
+                  left={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}
+                  top={-30}
+                  increaseBy="left"
+               />
+               <CreateBoardBackground />
+            </EnemyPlayerBoardGrid>
+         </BoardWrapper>
+      </Boards>
    );
 };
 
