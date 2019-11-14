@@ -19,9 +19,19 @@ const server = express()
 
 const io = socketIO(server);
 
+let messageArray: string[] = [];
+
 io.on('connection', (socket) => {
+  // tslint:disable: no-console
   console.log('Client connected');
   socket.on('disconnect', () => console.log('Client disconnected'));
+
+  io.emit('message', messageArray);
+
+  socket.on('message', (text: string) => {
+    messageArray.push(text);
+    io.emit('message', messageArray);
+  });
 });
 
 setInterval(() => io.emit('time', new Date().toTimeString()), 1000);

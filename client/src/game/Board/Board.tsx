@@ -38,10 +38,7 @@ const Board: React.FC = () => {
       lastElementPositionTransform = elem.style.transform;
    };
 
-   const gridLayout = [
-      { i: 'a', x: 0, y: 0, w: 1, h: 1, maxW: 1, maxH: 1 },
-      { i: 'b', x: 0, y: 6, w: 4, h: 1 },
-   ];
+
    const onClick = (e) => {
       console.log(e.target.dataset.test);
    };
@@ -82,8 +79,8 @@ const Board: React.FC = () => {
                      onLayoutChange={onLayoutChange}
                   >
                      <Box key="a" data-grid={{ i: 'a', x: 0, y: 0, w: 1, h: 1, maxW: 1, maxH: 1 }} onClick={onClick} />
-                     <Box key="b" data-grid={{ i: 'a', x: 6, y: 2, w: 4, h: 2, maxW: 1, maxH: 1 }} onClick={onClick} />
-                     <Box key="c" data-grid={{ i: 'a', x: 4, y: 2, w: 2, h: 2, maxW: 2, maxH: 2 }} onClick={onClick} />
+                     <Box key="b" data-grid={{ i: 'a', x: 6, y: 2, w: 4, h: 2}} onClick={onClick} />
+                     <Box key="c" data-grid={{ i: 'a', x: 4, y: 2, w: 2, h: 2}} onClick={onClick} />
 
                   </BoardGridLayout>
                   <CreateBoardBackground />

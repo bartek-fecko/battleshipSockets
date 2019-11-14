@@ -11,7 +11,7 @@ export const Boards = styled.div`
    }
    @media screen and (min-width: ${C.BoardDimensions.BoardWidth * 2 + 120}px){
       flex-direction: row;
-      padding: 60px;
+      padding-left: 25px;
       margin: 16px;
    }
 `;

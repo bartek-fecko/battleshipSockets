@@ -1,7 +1,7 @@
+// @ts-ignore-next-line: can't find path
+import * as shipSvg from '#/public/cruise.svg';
 import * as React from 'react';
 import styled from 'styled-components';
-// @ts-ignore-next-line: can't find path
-import * as shipSvg from '../../cruise.svg';
 
 const Wrapper = styled.div`
    display: flex;
