@@ -3,15 +3,16 @@ import styled from 'styled-components';
 import * as C from './constants';
 
 export const Boards = styled.div`
-   margin: 16px;
-   padding: 60px;
    display: flex;
    flex-direction: column;
+   margin: 10px 20px;
    & > * {
       margin: 8px 8px;
    }
    @media screen and (min-width: ${C.BoardDimensions.BoardWidth * 2 + 120}px){
       flex-direction: row;
+      padding: 60px;
+      margin: 16px;
    }
 `;
 

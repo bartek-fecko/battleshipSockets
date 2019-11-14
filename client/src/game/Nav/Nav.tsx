@@ -18,7 +18,8 @@ const Logo = styled.div`
 const LogoImage = styled.img`
    font-weight: bold;
    align-self: flex-start;
-   font-size: 2em;
+   width: 2.2em;
+   height: 2.2em;
    margin-left: 8px;
 `;
 
@@ -31,11 +32,7 @@ const Nav: React.FC = () => {
             from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
          </div>
          <Logo>Battleship</Logo>
-         <LogoImage
-            src={shipSvg}
-            width="32px"
-            height="32px"
-         />
+         <LogoImage src={shipSvg} />
       </Wrapper>
    );
 };
