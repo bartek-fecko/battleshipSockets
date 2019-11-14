@@ -64,6 +64,7 @@ export const BoardSquare = styled.span<{ width: number, top: number, left: numbe
    height: ${({ width }) => width}px;
    top: ${({ top }) => top}px;
    left: ${({ left }) => left}px;
+   background-color: white;
    border: 0.5px solid #eee;
    position: absolute;
    z-index: -1;

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as io from 'socket.io-client';
+import './globals.sass';
 
 import Board from '#/game/Board/Board';
 
