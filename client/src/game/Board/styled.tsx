@@ -27,17 +27,18 @@ export const BoardGridWrapper = styled.div`
    height: ${C.BoardDimensions.BoardHeight}px;
 `;
 
-export const PlayerBoardGrid = styled(BoardGridWrapper)<{ inactive: boolean }>`
+export const PlayerBoardGrid = styled(BoardGridWrapper) <{ inactive: boolean }>`
    z-index: ${({ inactive }) => inactive ? '-1' : '1'};
 `;
 
-export const EnemyPlayerBoardGrid = styled(BoardGridWrapper) <{ readyToPlay?: boolean }>`
+export const EnemyPlayerBoardGrid = styled(BoardGridWrapper)<{ readyToPlay?: boolean }>`
    &:after {
       content: "${C.notReadyToPlayMessage}";
       position: absolute;
       top: 50%;
       left:50%;
       transform: translate(-50%, -50%);
+      z-index: 10;
       display: ${({ readyToPlay }) => readyToPlay ? 'none' : 'block'};
    }
 `;
@@ -45,7 +46,6 @@ export const EnemyPlayerBoardGrid = styled(BoardGridWrapper) <{ readyToPlay?: bo
 export const BoardGridLayout = styled(GridLayout)`
    width: ${C.BoardDimensions.BoardWidth}px;
    height: ${C.BoardDimensions.BoardHeight}px !important;
-   border: 1px solid #eee;
 `;
 
 export const BoardCharactersWrapper = styled.div`
@@ -90,7 +90,7 @@ export const BoardToolsButton = styled.button`
    }
 `;
 
-export const StartGameButton = styled(BoardToolsButton) <{ readyToPlay: boolean }>`
+export const StartGameButton = styled(BoardToolsButton)<{ readyToPlay: boolean }>`
    border: 1px solid green;
    color: green;
    display: ${({ readyToPlay }) => readyToPlay ? 'none' : 'block'};
@@ -109,13 +109,21 @@ export const Box = styled.div`
    }
 `;
 
-export const BoardSquare = styled.span<{ width: number, top: number, left: number }>`
+export interface BoardSquareProps {
+   width: number,
+   top: number,
+   left: number,
+   hover?: boolean
+}
+
+export const BoardSquare = styled.span<BoardSquareProps>`
+   cursor: ${({ hover }) => hover && 'pointer'};
    width: ${({ width }) => width}px;
    height: ${({ width }) => width}px;
    top: ${({ top }) => top}px;
    left: ${({ left }) => left}px;
    background-color: white;
-   border: 0.5px solid #eee;
+   border: 0.2px solid #eee;
    position: absolute;
-   z-index: -1;
+   z-index: ${({ hover }) => hover ? '1' : '-1'};
 `;

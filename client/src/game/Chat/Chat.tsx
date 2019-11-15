@@ -47,6 +47,7 @@ const Chat: React.FC = () => {
          }
          socket.emit('message', userMessage);
          setUserMessage('');
+         setShowPicker(false);
       }
    };
 
@@ -57,8 +58,8 @@ const Chat: React.FC = () => {
    };
 
    const addMessage = (allMessages: string[]) => {
-      scrollChat();
       setMessages(allMessages);
+      scrollChat();
    };
 
    socket.on('message', addMessage);

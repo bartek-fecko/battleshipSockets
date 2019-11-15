@@ -2,6 +2,7 @@ import * as React from 'react';
 import 'react-grid-layout/css/styles.css';
 import * as io from 'socket.io-client';
 import { CreateBoardBackground, CreateBoardCharacters } from './BoardHelpers';
+import BoardTools from './BoardTools';
 import * as C from './constants';
 import {
    BoardGridLayout,
@@ -11,10 +12,11 @@ import {
    EnemyPlayerBoardGrid,
    PlayerBoardGrid,
 } from './styled';
-import BoardTools from './BoardTools';
 
 const Board: React.FC = () => {
    const [readyToPlay, setReadyToPlay] = React.useState(false);
+   const [shipsLayout, setShipsLayout] = React.useState<C.ReactGridLayout[]>();
+
    let lastElementPositionTransform: string;
    const onDrop = (
       layout: C.ReactGridLayout[],
@@ -45,8 +47,17 @@ const Board: React.FC = () => {
 
    };
 
-   const onLayoutChange = (layout) => {
-      // console.log(layout)
+   const getLayoutFromLocalStorage = (): C.ReactGridLayout[] | null => {
+      if (localStorage.getItem('layout') !== null) {
+         const layout = JSON.parse(localStorage.getItem('layout'));
+         setShipsLayout(layout);
+         return layout;
+      }
+      return null;
+   };
+
+   const onLayoutChange = (layout: C.ReactGridLayout[]) => {
+      localStorage.setItem('layout', JSON.stringify(layout));
    };
 
    return (
@@ -68,7 +79,7 @@ const Board: React.FC = () => {
                <PlayerBoardGrid inactive={readyToPlay}>
                   <BoardGridLayout
                      className="layout"
-                     // layout={gridLayout}
+                     layout={shipsLayout || getLayoutFromLocalStorage()}
                      compactType={null}
                      preventCollision
                      cols={C.colNames.length}
@@ -80,10 +91,9 @@ const Board: React.FC = () => {
                      onDragStart={onDragStart}
                      onLayoutChange={onLayoutChange}
                   >
-                     <Box key="a" data-grid={{ i: 'a', x: 0, y: 0, w: 1, h: 1, maxW: 1, maxH: 1 }} />
-                     <Box key="b" data-grid={{ i: 'a', x: 6, y: 2, w: 4, h: 2 }} />
-                     <Box key="c" data-grid={{ i: 'a', x: 4, y: 2, w: 2, h: 2 }} />
-
+                     <Box key="a" />
+                     <Box key="b" />
+                     <Box key="c" />
                   </BoardGridLayout>
                   <CreateBoardBackground />
                </PlayerBoardGrid>
@@ -107,7 +117,7 @@ const Board: React.FC = () => {
                   top={-30}
                   increaseBy="left"
                />
-               <CreateBoardBackground />
+               <CreateBoardBackground hover onClick={() => { }} />
             </EnemyPlayerBoardGrid>
          </BoardWrapper>
       </Boards>
