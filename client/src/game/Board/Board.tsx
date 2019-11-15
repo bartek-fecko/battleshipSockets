@@ -11,8 +11,10 @@ import {
    EnemyPlayerBoardGrid,
    PlayerBoardGrid,
 } from './styled';
+import BoardTools from './BoardTools';
 
 const Board: React.FC = () => {
+   const [readyToPlay, setReadyToPlay] = React.useState(false);
    let lastElementPositionTransform: string;
    const onDrop = (
       layout: C.ReactGridLayout[],
@@ -38,9 +40,9 @@ const Board: React.FC = () => {
       lastElementPositionTransform = elem.style.transform;
    };
 
+   const startGameHandler = () => {
+      setReadyToPlay(true);
 
-   const onClick = (e) => {
-      console.log(e.target.dataset.test);
    };
 
    const onLayoutChange = (layout) => {
@@ -48,7 +50,7 @@ const Board: React.FC = () => {
    };
 
    return (
-      <Boards>
+      <Boards readyToPlay={readyToPlay}>
          <BoardWrapper>
             <CreateBoardCharacters
                characters={C.rowNames}
@@ -63,7 +65,7 @@ const Board: React.FC = () => {
                   top={-30}
                   increaseBy="left"
                />
-               <PlayerBoardGrid>
+               <PlayerBoardGrid inactive={readyToPlay}>
                   <BoardGridLayout
                      className="layout"
                      // layout={gridLayout}
@@ -78,13 +80,17 @@ const Board: React.FC = () => {
                      onDragStart={onDragStart}
                      onLayoutChange={onLayoutChange}
                   >
-                     <Box key="a" data-grid={{ i: 'a', x: 0, y: 0, w: 1, h: 1, maxW: 1, maxH: 1 }} onClick={onClick} />
-                     <Box key="b" data-grid={{ i: 'a', x: 6, y: 2, w: 4, h: 2}} onClick={onClick} />
-                     <Box key="c" data-grid={{ i: 'a', x: 4, y: 2, w: 2, h: 2}} onClick={onClick} />
+                     <Box key="a" data-grid={{ i: 'a', x: 0, y: 0, w: 1, h: 1, maxW: 1, maxH: 1 }} />
+                     <Box key="b" data-grid={{ i: 'a', x: 6, y: 2, w: 4, h: 2 }} />
+                     <Box key="c" data-grid={{ i: 'a', x: 4, y: 2, w: 2, h: 2 }} />
 
                   </BoardGridLayout>
                   <CreateBoardBackground />
                </PlayerBoardGrid>
+               <BoardTools
+                  onStartGame={startGameHandler}
+                  readyToPlay={readyToPlay}
+               />
             </div>
          </BoardWrapper>
          <BoardWrapper>
@@ -94,7 +100,7 @@ const Board: React.FC = () => {
                left={-30}
                increaseBy="top"
             />
-            <EnemyPlayerBoardGrid>
+            <EnemyPlayerBoardGrid readyToPlay={readyToPlay}>
                <CreateBoardCharacters
                   characters={C.colNames}
                   left={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}

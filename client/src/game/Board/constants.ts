@@ -17,3 +17,5 @@ export interface ReactGridLayout {
    minH: number;
    maxH: number;
 }
+
+export const notReadyToPlayMessage = 'To start game, arrange your ships and press start button.';

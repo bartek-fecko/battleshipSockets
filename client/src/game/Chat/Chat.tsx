@@ -20,6 +20,11 @@ const Chat: React.FC = () => {
    const [messages, setMessages] = React.useState<string[]>([]);
    const [showPicker, setShowPicker] = React.useState(false);
    const socket = appVariables.socket;
+   const chatBodyRef = React.useRef<HTMLDivElement>();
+
+   React.useEffect(() => {
+      scrollChat();
+   }, []);
 
    const handleInputChange = (e) => {
       setUserMessage(e.target.value);
@@ -45,13 +50,22 @@ const Chat: React.FC = () => {
       }
    };
 
-   const addMessage = (allMessages: string[]) => setMessages(allMessages);
+   const scrollChat = () => {
+      if (chatBodyRef) {
+         chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+      }
+   };
+
+   const addMessage = (allMessages: string[]) => {
+      scrollChat();
+      setMessages(allMessages);
+   };
 
    socket.on('message', addMessage);
 
    return (
       <ChatWrapper>
-         <ChatBody>
+         <ChatBody ref={chatBodyRef}>
             {messages.map((message, i) => (
                <ChatMessage key={i} text={message} />
             ))}
@@ -78,7 +92,7 @@ const Chat: React.FC = () => {
                   type="text"
                   value={userMessage}
                   onChange={handleInputChange}
-                  placeholder="Your message"
+                  placeholder="Your message. Hit enter to send."
                   onKeyDown={onInputKeyDown}
                />
                <PickerButton
@@ -89,11 +103,6 @@ const Chat: React.FC = () => {
                   onClick={handleShowPicker}
                />
             </InputWithPicker>
-            <div style={{ display: 'none' }}>Icons made by
-                <a href="https://www.flaticon.com/authors/smashicons"
-                  title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/"
-                     title="Flaticon">www.flaticon.com</a>
-            </div>
          </form>
       </ChatWrapper>
    );
