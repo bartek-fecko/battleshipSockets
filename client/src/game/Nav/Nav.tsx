@@ -1,39 +1,29 @@
+import { appVariables } from '#/config/appConstants';
 // @ts-ignore-next-line: can't find path
 import * as shipSvg from '#/public/cruise.svg';
 import * as React from 'react';
-import styled from 'styled-components';
-
-const Wrapper = styled.div`
-   display: flex;
-   padding: 20px;
-`;
-
-const Logo = styled.div`
-   font-weight: bold;
-   align-self: flex-start;
-   font-size: 2em;
-   margin-left: 64px;
-`;
-
-const LogoImage = styled.img`
-   font-weight: bold;
-   align-self: flex-start;
-   width: 2.2em;
-   height: 2.2em;
-   margin-left: 8px;
-`;
+import { Logo, LogoImage, LogoWrapper, NavWrapper, TotalPlayers } from './styled';
 
 const Nav: React.FC = () => {
+   const [totalPlayers, setTotalPlayers] = React.useState();
+   const socket = appVariables.socket;
+
+   socket.on('totalUsers', (allPlayers: number) => setTotalPlayers(allPlayers));
 
    return (
-      <Wrapper>
-         <div style={{ display: 'none' }}>Icons made by
+      <NavWrapper>
+         <LogoWrapper>
+            <div style={{ display: 'none' }}>Icons made by
             <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
-            from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-         </div>
-         <Logo>Battleship</Logo>
-         <LogoImage src={shipSvg} />
-      </Wrapper>
+               from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+            </div>
+            <Logo>Battleship</Logo>
+            <LogoImage src={shipSvg} />
+         </LogoWrapper>
+         <TotalPlayers>
+            {totalPlayers} online players
+         </TotalPlayers>
+      </NavWrapper>
    );
 };
 

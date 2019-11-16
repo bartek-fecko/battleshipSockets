@@ -17,7 +17,6 @@ export const Boards = styled.div<{ readyToPlay: boolean }>`
 `;
 
 export const BoardWrapper = styled.div`
-   display: flex;
    padding: 0 30px 30px 10px;
 `;
 
@@ -126,4 +125,17 @@ export const BoardSquare = styled.span<BoardSquareProps>`
    border: 0.2px solid #eee;
    position: absolute;
    z-index: ${({ hover }) => hover ? '1' : '-1'};
+`;
+
+export const TurnInformation = styled.div`
+   font-size: 0.8em;
+   margin: 8px 0;
+`;
+
+export const MyTurn = styled(TurnInformation)`
+   color: green;
+`;
+
+export const EnemyTurn = styled(TurnInformation)`
+   color: red;
 `;

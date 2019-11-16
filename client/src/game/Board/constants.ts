@@ -22,3 +22,10 @@ export interface ReactGridLayout {
 }
 
 export const notReadyToPlayMessage = 'To start game, arrange your ships and press start button.';
+
+export enum BattleshipEvents {
+   OnAttack = 'OnAttack',
+   OnReceiveAttack = 'OnReceiveAttack',
+   PlayerReady = 'PlayerReady',
+   YourTurn = 'YourTurn',
+}

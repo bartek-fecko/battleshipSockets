@@ -10,11 +10,11 @@ export interface CreateBoardBackgroundProps {
    colLength?: number;
    boxWidth?: number;
    hover?: boolean;
-   onClick?: (...params: any[]) => void;
+   onFieldClick?: (...params: any[]) => void;
 }
 
 export const CreateBoardBackground: React.FC<CreateBoardBackgroundProps> = ({
-   rowLength = 10, colLength = 10, boxWidth = 32, hover,
+   rowLength = 10, colLength = 10, boxWidth = 32, hover, onFieldClick,
 }) => (
       <>
          {new Array(rowLength).fill(0).map((_, rowIndex) => (
@@ -27,6 +27,7 @@ export const CreateBoardBackground: React.FC<CreateBoardBackgroundProps> = ({
                   data-row={rowIndex}
                   data-col={colIndex}
                   hover={hover}
+                  onClick={onFieldClick}
                />
             ))
          ))}

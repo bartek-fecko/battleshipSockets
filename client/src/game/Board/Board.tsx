@@ -1,6 +1,5 @@
 import * as React from 'react';
 import 'react-grid-layout/css/styles.css';
-import * as io from 'socket.io-client';
 import { CreateBoardBackground, CreateBoardCharacters } from './BoardHelpers';
 import BoardTools from './BoardTools';
 import * as C from './constants';
@@ -11,11 +10,16 @@ import {
    Box,
    EnemyPlayerBoardGrid,
    PlayerBoardGrid,
+   MyTurn,
+   EnemyTurn,
 } from './styled';
+import { appVariables } from '#/config/appConstants';
 
 const Board: React.FC = () => {
    const [readyToPlay, setReadyToPlay] = React.useState(false);
+   const [myTurn, setMyTurn] = React.useState(true);
    const [shipsLayout, setShipsLayout] = React.useState<C.ReactGridLayout[]>();
+   const socket = appVariables.socket;
 
    let lastElementPositionTransform: string;
    const onDrop = (
@@ -44,8 +48,26 @@ const Board: React.FC = () => {
 
    const startGameHandler = () => {
       setReadyToPlay(true);
-
+      setMyTurn(false);
+      socket.emit(C.BattleshipEvents.PlayerReady);
    };
+
+   const onFieldClick = (e: React.MouseEvent<HTMLElement>) => {
+      if (myTurn) {
+         console.log(Number((e.target as HTMLElement).dataset.col));
+         console.log(appVariables.socket)
+         socket.emit(C.BattleshipEvents.OnAttack, {
+            x: Number((e.target as HTMLElement).dataset.col),
+            y: Number((e.target as HTMLElement).dataset.row),
+         });
+         setMyTurn(false);
+      }
+   };
+
+   socket.on(C.BattleshipEvents.YourTurn, () => {
+      console.log('kurwa')
+      setMyTurn(true);
+   });
 
    const getLayoutFromLocalStorage = (): C.ReactGridLayout[] | null => {
       if (localStorage.getItem('layout') !== null) {
@@ -117,8 +139,12 @@ const Board: React.FC = () => {
                   top={-30}
                   increaseBy="left"
                />
-               <CreateBoardBackground hover onClick={() => { }} />
+               <CreateBoardBackground
+                  hover
+                  onFieldClick={onFieldClick}
+               />
             </EnemyPlayerBoardGrid>
+            {myTurn ? <MyTurn>My Turn</MyTurn> : <EnemyTurn>Enemy Turn</EnemyTurn>}
          </BoardWrapper>
       </Boards>
    );

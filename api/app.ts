@@ -1,4 +1,9 @@
+// tslint:disable: no-console
 'use strict';
+
+import { Socket, Players, BattleshipEvents } from './constants';
+import { BattleshipGame } from './battleshipGame';
+
 const dotenv = require('dotenv');
 const cors = require('cors');
 const express = require('express');
@@ -19,19 +24,64 @@ const server = express()
 
 const io = socketIO(server);
 
-let messageArray: string[] = [];
+const messageArray: string[] = [];
+const players: Players = {};
 
-io.on('connection', (socket) => {
-  // tslint:disable: no-console
-  console.log('Client connected');
-  socket.on('disconnect', () => console.log('Client disconnected'));
+//socket.emit to connected 
+//socket.on listen to the event reply
+//socket.broadcast.emit to all other users
 
-  io.emit('message', messageArray);
+//io.emit to all connected
+
+const matchPlayers = () => {
+  let newGame: BattleshipGame;
+  let readyPlayers: string[];
+  readyPlayers = Object.keys(players).filter((playerId) => players[playerId].isWaiting);
+
+  const newRoom = `room${new Date().valueOf()}`;
+  if (readyPlayers.length >= 2) {
+    readyPlayers.forEach((playerId) => {
+      players[playerId].isWaiting = false;
+      players[playerId].roomName = newRoom;
+      players[playerId].socket.join(newRoom);
+    });
+
+    newGame = new BattleshipGame(
+      players[readyPlayers[0]],
+      players[readyPlayers[1]],
+      io,
+    );
+  }
+};
+
+io.on('connection', (socket: Socket) => {
+  players[socket.id] = {
+    id: socket.id,
+    isWaiting: false,
+    socket,
+    userName: 'steve',
+  };
+
+  io.emit('totalUsers', Object.keys(players).length);
+
+  socket.on(BattleshipEvents.PlayerReady, () => {
+    players[socket.id].isWaiting = true;
+    matchPlayers();
+  });
+
+  socket.emit('message', messageArray);
+
+  socket.on('totalUsers', () => socket.emit('totalUsers', Object.keys(players).length));
+
+  socket.on('getUsers', () => io.emit(players));
 
   socket.on('message', (text: string) => {
     messageArray.push(text);
     io.emit('message', messageArray);
   });
-});
 
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+  socket.on('disconnect', () => {
+    delete players[socket.id];
+    io.emit('totalUsers', Object.keys(players).length);
+  });
+});

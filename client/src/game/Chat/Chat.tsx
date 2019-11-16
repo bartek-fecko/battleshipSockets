@@ -1,4 +1,4 @@
-import { appVariables } from '#/App';
+import { appVariables } from '#/config/appConstants';
 // @ts-ignore-next-line: can't find path
 import * as smileSvg from '#/public/happy.svg';
 import { Picker } from 'emoji-mart';
