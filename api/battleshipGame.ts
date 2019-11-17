@@ -13,7 +13,7 @@ export class BattleshipGame {
       this.currentPlayer = 0;
       this.io = io;
       this.initializeEvents();
-      player1.socket.emit(BattleshipEvents.YourTurn);
+      player1.socket.emit(BattleshipEvents.OnYourTurn);
    }
 
    public changePlayer() {
@@ -27,12 +27,17 @@ export class BattleshipGame {
    public checkHit(x: number, y: number): boolean {
       const playerToCheck = this.playerList[this.differentPlayer()];
       if (playerToCheck && playerToCheck.shipsLayout) {
-         const hasHit: any[] = playerToCheck.shipsLayout.filter(({ x: userX, y: userY }) => userX === x && userY === y);
+         const hasHit: any[] = playerToCheck.shipsLayout.filter((
+            { x: userX, y: userY, w: userW }) => y === userY && x <= userX + userW - 1 && x >= userX,
+         );
          return !!hasHit.length;
       }
       return false;
    }
 
+   public checkWin(player: Player) {
+      return !player.hitsLeft;
+   }
 
    private initializeEvents() {
       this.playerList.forEach((player) => {
@@ -45,12 +50,19 @@ export class BattleshipGame {
             }
 
             if (this.checkHit(message.x, message.y)) {
+               enemyPlayer.hitsLeft--;
                enemyPlayer.socket.emit(BattleshipEvents.OnReceiveAttack, message);
-               currentPlayer.socket.emit(BattleshipEvents.YourTurn);
+               currentPlayer.socket.emit(BattleshipEvents.OnYourTurn);
             } else {
                enemyPlayer.socket.emit(BattleshipEvents.OnReceiveAttack, message);
-               enemyPlayer.socket.emit(BattleshipEvents.YourTurn);
+               enemyPlayer.socket.emit(BattleshipEvents.OnYourTurn);
                this.changePlayer();
+            }
+
+            if (this.checkWin(enemyPlayer)) {
+               this.io.to(player.roomName as string).emit(BattleshipEvents.OnWin, {
+                  winner: { id: currentPlayer.id, name: currentPlayer.userName },
+               });
             }
          });
       });

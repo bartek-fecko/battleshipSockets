@@ -26,13 +26,21 @@ export interface OnRecieveAttackMsg {
    y: number;
 }
 
+export interface OnWin {
+   winner: {
+      id: string;
+      name: string;
+   };
+}
+
 export const notReadyToPlayMessage = 'To start game, arrange your ships and press start button.';
 
 export enum BattleshipEvents {
    OnAttack = 'OnAttack',
    OnReceiveAttack = 'OnReceiveAttack',
-   PlayerReady = 'PlayerReady',
-   YourTurn = 'YourTurn',
+   OnYourTurn = 'OnYourTurn',
+   OnPlayerReady = 'OnPlayerReady',
+   OnWin = 'OnWin',
 }
 
 export const shipsInitialLayout = [

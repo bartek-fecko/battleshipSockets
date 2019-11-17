@@ -1,8 +1,13 @@
 // tslint:disable: no-console
 'use strict';
-
-import { Socket, Players, BattleshipEvents, UserShipsLayout } from './constants';
 import { BattleshipGame } from './battleshipGame';
+import {
+  BattleshipEvents,
+  numberOfShipPoints,
+  Players,
+  Socket,
+  UserShipsLayout,
+} from './constants';
 
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -27,11 +32,11 @@ const io = socketIO(server);
 const messageArray: string[] = [];
 const players: Players = {};
 
-//socket.emit to connected 
-//socket.on listen to the event reply
-//socket.broadcast.emit to all other users
+// socket.emit to connected
+// socket.on listen to the event reply
+// socket.broadcast.emit to all other users
 
-//io.emit to all connected
+// io.emit to all connected
 
 const matchPlayers = () => {
   let newGame: BattleshipGame;
@@ -56,6 +61,7 @@ const matchPlayers = () => {
 
 io.on('connection', (socket: Socket) => {
   players[socket.id] = {
+    hitsLeft: numberOfShipPoints,
     id: socket.id,
     isWaiting: false,
     socket,
@@ -64,7 +70,7 @@ io.on('connection', (socket: Socket) => {
 
   io.emit('totalUsers', Object.keys(players).length);
 
-  socket.on(BattleshipEvents.PlayerReady, (message: UserShipsLayout[]) => {
+  socket.on(BattleshipEvents.OnPlayerReady, (message: UserShipsLayout[]) => {
     players[socket.id].isWaiting = true;
     players[socket.id].shipsLayout = message;
     matchPlayers();
@@ -73,8 +79,6 @@ io.on('connection', (socket: Socket) => {
   socket.emit('message', messageArray);
 
   socket.on('totalUsers', () => socket.emit('totalUsers', Object.keys(players).length));
-
-  socket.on('getUsers', () => io.emit(players));
 
   socket.on('message', (text: string) => {
     messageArray.push(text);

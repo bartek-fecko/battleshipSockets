@@ -1,4 +1,5 @@
 import { appVariables } from '#/config/appConstants';
+import WinnerModal from '#/game/WinnerModal/WinnerModal';
 import * as React from 'react';
 import 'react-grid-layout/css/styles.css';
 import { CreateBoardBackground, CreateBoardCharacters } from './BoardHelpers';
@@ -18,6 +19,7 @@ import {
 const Board: React.FC = () => {
    const [readyToPlay, setReadyToPlay] = React.useState(false);
    const [myTurn, setMyTurn] = React.useState(true);
+   const [winnerInfo, setWinnerInfo] = React.useState<{ isWinner: boolean, winnerText: string }>();
    const [shipsLayout, setShipsLayout] = React.useState<C.ReactGridLayout[]>();
    const socket = appVariables.socket;
    const playerBoardRef = React.useRef<HTMLDivElement>();
@@ -51,7 +53,7 @@ const Board: React.FC = () => {
    const startGameHandler = () => {
       setReadyToPlay(true);
       setMyTurn(false);
-      socket.emit(C.BattleshipEvents.PlayerReady, shipsLayout);
+      socket.emit(C.BattleshipEvents.OnPlayerReady, shipsLayout);
    };
 
    const onFieldClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -62,13 +64,17 @@ const Board: React.FC = () => {
          if (enemyBoardRef) {
             const row = enemyBoardRef.current.querySelectorAll(`[data-row="${y}"]`);
             const target = row[x] as HTMLElement;
+            if (target.dataset.wasClicked) {
+               return;
+            }
+            target.dataset.wasClicked = 'true';
             target.style.background = 'red';
+            setMyTurn(false);
          }
-         setMyTurn(false);
       }
    };
 
-   socket.on(C.BattleshipEvents.YourTurn, () => {
+   socket.on(C.BattleshipEvents.OnYourTurn, () => {
       setMyTurn(true);
    });
 
@@ -80,10 +86,16 @@ const Board: React.FC = () => {
       }
    });
 
+   socket.on(C.BattleshipEvents.OnWin, ({ winner: { id, name } }: C.OnWin) => {
+      const winnerText = socket.id === id
+         ? `Sorry, You lost, the winner of this match is ${name}`
+         : `Congratullation ${name}. You've won a match.`;
+      setWinnerInfo({ isWinner: true, winnerText });
+   });
+
    const getLayoutFromLocalStorage = (): C.ReactGridLayout[] | null => {
       if (localStorage.getItem('layout') !== null) {
          const layout = JSON.parse(localStorage.getItem('layout'));
-         setShipsLayout(layout);
          return layout;
       }
       return null;
@@ -91,10 +103,14 @@ const Board: React.FC = () => {
 
    const onLayoutChange = (layout: C.ReactGridLayout[]) => {
       localStorage.setItem('layout', JSON.stringify(layout));
+      setShipsLayout(layout);
    };
 
    return (
       <Boards readyToPlay={readyToPlay}>
+         {!winnerInfo && winnerInfo.isWinner && (
+            <WinnerModal isWinner={winnerInfo.isWinner}>{winnerInfo.winnerText}</WinnerModal>
+         )}
          <BoardWrapper ref={playerBoardRef}>
             <CreateBoardCharacters
                characters={C.rowNames}
@@ -112,7 +128,7 @@ const Board: React.FC = () => {
                <PlayerBoardGrid inactive={readyToPlay}>
                   <BoardGridLayout
                      className="layout"
-                     layout={shipsLayout || getLayoutFromLocalStorage()}
+                     layout={shipsLayout || getLayoutFromLocalStorage() || C.shipsInitialLayout}
                      compactType={null}
                      preventCollision
                      cols={C.colNames.length}
@@ -124,9 +140,7 @@ const Board: React.FC = () => {
                      onDragStart={onDragStart}
                      onLayoutChange={onLayoutChange}
                   >
-                     <Box key="a" />
-                     <Box key="b" />
-                     <Box key="c" />
+                     {C.shipsInitialLayout.map(({ i }) => <Box key={i} />)}
                   </BoardGridLayout>
                   <CreateBoardBackground />
                </PlayerBoardGrid>
@@ -150,12 +164,19 @@ const Board: React.FC = () => {
                   top={-30}
                   increaseBy="left"
                />
-               <CreateBoardBackground
-                  hover
-                  onFieldClick={onFieldClick}
-               />
+               {readyToPlay && (
+                  <CreateBoardBackground
+                     hover
+                     onFieldClick={onFieldClick}
+                  />
+               )}
             </EnemyPlayerBoardGrid>
-            {myTurn ? <MyTurn>My Turn</MyTurn> : <EnemyTurn>Enemy Turn</EnemyTurn>}
+            {readyToPlay
+               ? myTurn
+                  ? <MyTurn>My Turn</MyTurn>
+                  : <EnemyTurn>Enemy Turn</EnemyTurn>
+               : ''
+            }
          </BoardWrapper>
       </Boards>
    );

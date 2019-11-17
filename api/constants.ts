@@ -13,6 +13,7 @@ export interface Player {
    userName: string;
    roomName?: string;
    id: string;
+   hitsLeft: number;
    shipsLayout?: UserShipsLayout[];
 }
 
@@ -28,8 +29,9 @@ export interface AttackEventMessage {
 export enum BattleshipEvents {
    OnAttack = 'OnAttack',
    OnReceiveAttack = 'OnReceiveAttack',
-   YourTurn = 'YourTurn',
-   PlayerReady = 'PlayerReady',
+   OnYourTurn = 'OnYourTurn',
+   OnPlayerReady = 'OnPlayerReady',
+   OnWin = 'OnWin',
 }
 
 export interface UserShipsLayout {
@@ -43,3 +45,5 @@ export interface UserShipsLayout {
    minH: number;
    maxH: number;
 }
+
+export const numberOfShipPoints = 13;
