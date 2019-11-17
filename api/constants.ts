@@ -13,6 +13,7 @@ export interface Player {
    userName: string;
    roomName?: string;
    id: string;
+   shipsLayout?: UserShipsLayout[];
 }
 
 export interface Players {
@@ -29,4 +30,16 @@ export enum BattleshipEvents {
    OnReceiveAttack = 'OnReceiveAttack',
    YourTurn = 'YourTurn',
    PlayerReady = 'PlayerReady',
+}
+
+export interface UserShipsLayout {
+   i: string;
+   x: number;
+   y: number;
+   w: number;
+   h: number;
+   minw: number;
+   maxW: number;
+   minH: number;
+   maxH: number;
 }

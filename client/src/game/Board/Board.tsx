@@ -1,3 +1,4 @@
+import { appVariables } from '#/config/appConstants';
 import * as React from 'react';
 import 'react-grid-layout/css/styles.css';
 import { CreateBoardBackground, CreateBoardCharacters } from './BoardHelpers';
@@ -9,17 +10,18 @@ import {
    BoardWrapper,
    Box,
    EnemyPlayerBoardGrid,
-   PlayerBoardGrid,
-   MyTurn,
    EnemyTurn,
+   MyTurn,
+   PlayerBoardGrid,
 } from './styled';
-import { appVariables } from '#/config/appConstants';
 
 const Board: React.FC = () => {
    const [readyToPlay, setReadyToPlay] = React.useState(false);
    const [myTurn, setMyTurn] = React.useState(true);
    const [shipsLayout, setShipsLayout] = React.useState<C.ReactGridLayout[]>();
    const socket = appVariables.socket;
+   const playerBoardRef = React.useRef<HTMLDivElement>();
+   const enemyBoardRef = React.useRef<HTMLDivElement>();
 
    let lastElementPositionTransform: string;
    const onDrop = (
@@ -49,21 +51,33 @@ const Board: React.FC = () => {
    const startGameHandler = () => {
       setReadyToPlay(true);
       setMyTurn(false);
-      socket.emit(C.BattleshipEvents.PlayerReady);
+      socket.emit(C.BattleshipEvents.PlayerReady, shipsLayout);
    };
 
    const onFieldClick = (e: React.MouseEvent<HTMLElement>) => {
+      const x = Number((e.target as HTMLElement).dataset.col);
+      const y = Number((e.target as HTMLElement).dataset.row);
       if (myTurn) {
-         socket.emit(C.BattleshipEvents.OnAttack, {
-            x: Number((e.target as HTMLElement).dataset.col),
-            y: Number((e.target as HTMLElement).dataset.row),
-         });
+         socket.emit(C.BattleshipEvents.OnAttack, { x, y });
+         if (enemyBoardRef) {
+            const row = enemyBoardRef.current.querySelectorAll(`[data-row="${y}"]`);
+            const target = row[x] as HTMLElement;
+            target.style.background = 'red';
+         }
          setMyTurn(false);
       }
    };
 
    socket.on(C.BattleshipEvents.YourTurn, () => {
       setMyTurn(true);
+   });
+
+   socket.on(C.BattleshipEvents.OnReceiveAttack, (message: C.OnRecieveAttackMsg) => {
+      if (message && playerBoardRef) {
+         const row = playerBoardRef.current.querySelectorAll(`[data-row="${message.y}"]`);
+         const target = row[message.x] as HTMLElement;
+         (target.style as unknown as string) = 'background: red; z-index: 1';
+      }
    });
 
    const getLayoutFromLocalStorage = (): C.ReactGridLayout[] | null => {
@@ -81,7 +95,7 @@ const Board: React.FC = () => {
 
    return (
       <Boards readyToPlay={readyToPlay}>
-         <BoardWrapper>
+         <BoardWrapper ref={playerBoardRef}>
             <CreateBoardCharacters
                characters={C.rowNames}
                top={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}
@@ -122,14 +136,14 @@ const Board: React.FC = () => {
                />
             </div>
          </BoardWrapper>
-         <BoardWrapper>
+         <BoardWrapper ref={enemyBoardRef}>
             <CreateBoardCharacters
                characters={C.rowNames}
                top={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}
                left={-30}
                increaseBy="top"
             />
-            <EnemyPlayerBoardGrid readyToPlay={readyToPlay}>
+            <EnemyPlayerBoardGrid readyToPlay={readyToPlay} >
                <CreateBoardCharacters
                   characters={C.colNames}
                   left={C.BoardDimensions.BoxWidth + C.BoardDimensions.BoxWidth / 2 - 15}

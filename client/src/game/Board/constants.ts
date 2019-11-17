@@ -15,10 +15,15 @@ export interface ReactGridLayout {
    y: number;
    w: number;
    h: number;
-   minw: number;
-   maxW: number;
-   minH: number;
-   maxH: number;
+   minw?: number;
+   maxW?: number;
+   minH?: number;
+   maxH?: number;
+}
+
+export interface OnRecieveAttackMsg {
+   x: number;
+   y: number;
 }
 
 export const notReadyToPlayMessage = 'To start game, arrange your ships and press start button.';
@@ -29,3 +34,11 @@ export enum BattleshipEvents {
    PlayerReady = 'PlayerReady',
    YourTurn = 'YourTurn',
 }
+
+export const shipsInitialLayout = [
+   { x: 0, y: 0, w: 1, h: 1, i: 'short-a' },
+   { x: 0, y: 2, w: 1, h: 1, i: 'short-b' },
+   { x: 0, y: 4, w: 3, h: 1, i: 'medium-a' },
+   { x: 0, y: 6, w: 3, h: 1, i: 'medium-b' },
+   { x: 0, y: 8, w: 5, h: 1, i: 'long' },
+];

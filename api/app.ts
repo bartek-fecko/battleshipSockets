@@ -1,7 +1,7 @@
 // tslint:disable: no-console
 'use strict';
 
-import { Socket, Players, BattleshipEvents } from './constants';
+import { Socket, Players, BattleshipEvents, UserShipsLayout } from './constants';
 import { BattleshipGame } from './battleshipGame';
 
 const dotenv = require('dotenv');
@@ -64,8 +64,9 @@ io.on('connection', (socket: Socket) => {
 
   io.emit('totalUsers', Object.keys(players).length);
 
-  socket.on(BattleshipEvents.PlayerReady, () => {
+  socket.on(BattleshipEvents.PlayerReady, (message: UserShipsLayout[]) => {
     players[socket.id].isWaiting = true;
+    players[socket.id].shipsLayout = message;
     matchPlayers();
   });
 

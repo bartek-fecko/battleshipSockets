@@ -52,7 +52,7 @@ const Chat: React.FC = () => {
    };
 
    const scrollChat = () => {
-      if (chatBodyRef) {
+      if (chatBodyRef && chatBodyRef.current) {
          chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
       }
    };
