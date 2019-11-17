@@ -54,8 +54,6 @@ const Board: React.FC = () => {
 
    const onFieldClick = (e: React.MouseEvent<HTMLElement>) => {
       if (myTurn) {
-         console.log(Number((e.target as HTMLElement).dataset.col));
-         console.log(appVariables.socket)
          socket.emit(C.BattleshipEvents.OnAttack, {
             x: Number((e.target as HTMLElement).dataset.col),
             y: Number((e.target as HTMLElement).dataset.row),
@@ -65,7 +63,6 @@ const Board: React.FC = () => {
    };
 
    socket.on(C.BattleshipEvents.YourTurn, () => {
-      console.log('kurwa')
       setMyTurn(true);
    });
 

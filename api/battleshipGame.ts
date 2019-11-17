@@ -1,9 +1,9 @@
 // tslint:disable: triple-equals
-import { Player, Socket, BattleshipEvents, AttackEventMessage } from './constants';
+import { AttackEventMessage, BattleshipEvents, Player, Socket } from './constants';
 
 export class BattleshipGame {
    private playerList: [Player, Player];
-   private currentPlayer: number;
+   private currentPlayer: 0 | 1;
    private io: Socket;
    private roomName: string;
 
