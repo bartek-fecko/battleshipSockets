@@ -61,7 +61,7 @@ export class BattleshipGame {
 
             if (this.checkWin(enemyPlayer)) {
                this.io.to(player.roomName as string).emit(BattleshipEvents.OnWin, {
-                  winner: { id: currentPlayer.id, name: currentPlayer.userName },
+                  winner: { id: currentPlayer.clientId, name: currentPlayer.userName },
                });
             }
          });

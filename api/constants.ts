@@ -10,10 +10,11 @@ export interface Socket {
 export interface Player {
    isWaiting: boolean;
    socket: Socket;
-   userName: string;
+   userName?: string;
    roomName?: string;
    id: string;
    hitsLeft: number;
+   clientId?: string;
    shipsLayout?: UserShipsLayout[];
 }
 
@@ -24,6 +25,11 @@ export interface Players {
 export interface AttackEventMessage {
    x: number;
    y: number;
+}
+
+export interface Message {
+   userName: string;
+   message: string;
 }
 
 export enum BattleshipEvents {

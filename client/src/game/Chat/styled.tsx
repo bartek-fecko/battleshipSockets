@@ -1,26 +1,31 @@
 import styled, { keyframes } from 'styled-components';
-import { pickerWidth } from './consants';
+import { displayAllGameItems, pickerWidth } from './consants';
 
 export const borderColor = '#d9d9d9';
 
 export const ChatWrapper = styled.div`
-   align-self: flex-start;
+   background-color: white;
+   position: fixed;
+   bottom: 0;
+   left: 0;
+   z-index: 998;
+   width: 100%;
+   @media screen and (min-width: ${displayAllGameItems}px) {
+      align-self: flex-start;
+      position: sticky;
+      width: auto;
+   }
 `;
 
-export const ChatBody = styled.div`
-   height: 300px;
+export const ChatBody = styled.div<{ show: boolean }>`
+   display: ${({ show }) => show ? 'block' : 'none'};
+   height: 180px;
    border: 1px solid ${borderColor};
    overflow-y: scroll;
-`;
-
-export const ChatMessageWrapper = styled.div`
-   display: flex;
-   justify-content: flex-end;
-   max-width: 60%;
-   border: 1px solid ${borderColor};
-   border-radius: 5px;
-   margin: 8px 8px 8px auto;
-   padding: 8px;
+   @media screen and (min-width: ${displayAllGameItems}px) {
+      height: 300px;
+      width: 400px;
+   }
 `;
 
 export const Input = styled.input`
@@ -28,6 +33,8 @@ export const Input = styled.input`
    border-radius: 5px;
    width: ${pickerWidth}px;
    border: 1px solid ${borderColor};
+   margin: auto;
+   flex-grow: 1;
 `;
 
 export const PickerWrapper = styled.div<{ show: boolean }>`

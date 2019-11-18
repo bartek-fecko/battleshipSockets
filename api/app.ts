@@ -3,6 +3,7 @@
 import { BattleshipGame } from './battleshipGame';
 import {
   BattleshipEvents,
+  Message,
   numberOfShipPoints,
   Players,
   Socket,
@@ -29,7 +30,7 @@ const server = express()
 
 const io = socketIO(server);
 
-const messageArray: string[] = [];
+const messageArray: Message[] = [];
 const players: Players = {};
 
 // socket.emit to connected
@@ -65,8 +66,12 @@ io.on('connection', (socket: Socket) => {
     id: socket.id,
     isWaiting: false,
     socket,
-    userName: 'steve',
   };
+
+  socket.on('setUserName', ({ name, id }) => {
+    players[socket.id].userName = name;
+    players[socket.id].clientId = id;
+  });
 
   io.emit('totalUsers', Object.keys(players).length);
 
@@ -76,12 +81,17 @@ io.on('connection', (socket: Socket) => {
     matchPlayers();
   });
 
-  socket.emit('message', messageArray);
-
   socket.on('totalUsers', () => socket.emit('totalUsers', Object.keys(players).length));
 
+  socket.emit('message', messageArray);
+
   socket.on('message', (text: string) => {
-    messageArray.push(text);
+    const message = {
+      date: new Date().toLocaleString(),
+      message: text,
+      userName: players[socket.id].userName,
+    };
+    messageArray.push(message as Message);
     io.emit('message', messageArray);
   });
 

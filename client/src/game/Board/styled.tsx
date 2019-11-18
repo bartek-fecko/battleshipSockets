@@ -26,22 +26,6 @@ export const BoardGridWrapper = styled.div`
    height: ${C.BoardDimensions.BoardHeight}px;
 `;
 
-export const PlayerBoardGrid = styled(BoardGridWrapper) <{ inactive: boolean }>`
-   z-index: ${({ inactive }) => inactive ? '-1' : '1'};
-`;
-
-export const EnemyPlayerBoardGrid = styled(BoardGridWrapper)<{ readyToPlay?: boolean }>`
-   &:after {
-      content: "${C.notReadyToPlayMessage}";
-      position: absolute;
-      top: 50%;
-      left:50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-      display: ${({ readyToPlay }) => readyToPlay ? 'none' : 'block'};
-   }
-`;
-
 export const BoardGridLayout = styled(GridLayout)`
    width: ${C.BoardDimensions.BoardWidth}px;
    height: ${C.BoardDimensions.BoardHeight}px !important;
@@ -109,10 +93,10 @@ export const Box = styled.div`
 `;
 
 export interface BoardSquareProps {
-   width: number,
-   top: number,
-   left: number,
-   hover?: boolean
+   width: number;
+   top: number;
+   left: number;
+   hover?: boolean;
 }
 
 export const BoardSquare = styled.span<BoardSquareProps>`
@@ -125,17 +109,4 @@ export const BoardSquare = styled.span<BoardSquareProps>`
    border: 0.2px solid #eee;
    position: absolute;
    z-index: ${({ hover }) => hover ? '1' : '-1'};
-`;
-
-export const TurnInformation = styled.div`
-   font-size: 0.8em;
-   margin: 8px 0;
-`;
-
-export const MyTurn = styled(TurnInformation)`
-   color: green;
-`;
-
-export const EnemyTurn = styled(TurnInformation)`
-   color: red;
 `;

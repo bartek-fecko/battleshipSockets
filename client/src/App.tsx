@@ -4,7 +4,8 @@ import styled from 'styled-components';
 
 import Board from '#/game/Board/Board';
 import Chat from '#/game/Chat/Chat';
-import Nav from '#/game/Nav/Nav';
+import Nav from '#/modules/Nav/Nav';
+import WelcomeScreen from './modules/WelcomeScreen/WelcomeScreen';
 
 const MainContent = styled.div`
    display: flex;
@@ -13,6 +14,7 @@ const MainContent = styled.div`
 export const App: React.FC = () => {
    return (
       <>
+         <WelcomeScreen />
          <Nav />
          <MainContent>
             <Board />
