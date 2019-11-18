@@ -2,6 +2,7 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
 const battleshipGame_1 = require("./battleshipGame");
+const constants_1 = require("./constants");
 const dotenv = require('dotenv');
 const cors = require('cors');
 const express = require('express');
@@ -20,36 +21,50 @@ const server = express()
 const io = socketIO(server);
 const messageArray = [];
 const players = {};
-//socket.emit to connected 
-//socket.on listen to the event reply
-//socket.broadcast.emit to all other users
-//io.emit to all connected
+// socket.emit to connected
+// socket.on listen to the event reply
+// socket.broadcast.emit to all other users
+// io.emit to all connected
 const matchPlayers = () => {
-    const playersKeys = Object.keys(players);
     let newGame;
     let readyPlayers;
-    readyPlayers = playersKeys.filter((playerId) => players[playerId].isWaiting);
-    if (readyPlayers.length > 1) {
-        delete players[readyPlayers[0]];
-        delete players[readyPlayers[1]];
+    readyPlayers = Object.keys(players).filter((playerId) => players[playerId].isWaiting);
+    const newRoom = `room${new Date().valueOf()}`;
+    if (readyPlayers.length >= 2) {
+        readyPlayers.forEach((playerId) => {
+            players[playerId].isWaiting = false;
+            players[playerId].roomName = newRoom;
+            players[playerId].socket.join(newRoom);
+        });
         newGame = new battleshipGame_1.BattleshipGame(players[readyPlayers[0]], players[readyPlayers[1]], io);
     }
 };
 io.on('connection', (socket) => {
     players[socket.id] = {
+        hitsLeft: constants_1.numberOfShipPoints,
         id: socket.id,
-        isWaiting: true,
+        isWaiting: false,
         socket,
-        userName: 'steve',
     };
-    console.log(players);
+    socket.on('setUserName', ({ name, id }) => {
+        players[socket.id].userName = name;
+        players[socket.id].clientId = id;
+    });
     io.emit('totalUsers', Object.keys(players).length);
-    matchPlayers();
-    socket.emit('message', messageArray);
+    socket.on(constants_1.BattleshipEvents.OnPlayerReady, (message) => {
+        players[socket.id].isWaiting = true;
+        players[socket.id].shipsLayout = message;
+        matchPlayers();
+    });
     socket.on('totalUsers', () => socket.emit('totalUsers', Object.keys(players).length));
-    socket.on('getUsers', () => io.emit(players));
+    socket.emit('message', messageArray);
     socket.on('message', (text) => {
-        messageArray.push(text);
+        const message = {
+            date: new Date().toLocaleString(),
+            message: text,
+            userName: players[socket.id].userName,
+        };
+        messageArray.push(message);
         io.emit('message', messageArray);
     });
     socket.on('disconnect', () => {
