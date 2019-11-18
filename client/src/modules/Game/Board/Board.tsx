@@ -1,5 +1,5 @@
 import { appVariables } from '#/config/appConstants';
-import WinnerModal from '#/game/WinnerModal/WinnerModal';
+import WinnerModal from '#/modules/WinnerModal/WinnerModal';
 import * as React from 'react';
 import 'react-grid-layout/css/styles.css';
 import { BattleshipEvents, OnRecieveAttackMsg, OnWin, ReactGridLayout } from './constants';

@@ -4,8 +4,8 @@ import {
    ReactGridLayout,
    rowNames,
    shipsInitialLayout,
-} from '#/game/Board/constants';
-import { BoardGridLayout, BoardWrapper, Box } from '#/game/Board/styled';
+} from '#/modules/Game/Board/constants';
+import { BoardGridLayout, BoardWrapper, Box } from '#/modules/Game/Board/styled';
 import * as React from 'react';
 import 'react-grid-layout/css/styles.css';
 import { CreateBoardBackground, CreateBoardCharacters } from '../BoardHelpers';

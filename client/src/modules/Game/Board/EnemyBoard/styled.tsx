@@ -1,5 +1,5 @@
-import { notReadyToPlayMessage } from '#/game/Board/constants';
-import { BoardGridWrapper } from '#/game/Board/styled';
+import { notReadyToPlayMessage } from '#/modules/Game/Board/constants';
+import { BoardGridWrapper } from '#/modules/Game/Board/styled';
 import styled from 'styled-components';
 
 export const EnemyPlayerBoardGrid = styled(BoardGridWrapper)<{ readyToPlay?: boolean }>`

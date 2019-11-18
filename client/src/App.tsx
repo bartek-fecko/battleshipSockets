@@ -2,10 +2,10 @@ import '#/config/globals.sass';
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Board from '#/game/Board/Board';
-import Chat from '#/game/Chat/Chat';
+import Chat from '#/modules/Chat/Chat';
+import Board from '#/modules/Game/Board/Board';
 import Nav from '#/modules/Nav/Nav';
-import WelcomeScreen from './modules/WelcomeScreen/WelcomeScreen';
+import WelcomeScreen from '#/modules/WelcomeScreen/WelcomeScreen';
 
 const MainContent = styled.div`
    display: flex;

@@ -1,7 +1,7 @@
 import { appVariables } from '#/config/appConstants';
-import { CreateBoardBackground, CreateBoardCharacters } from '#/game/Board/BoardHelpers';
-import { BoardDimensions, colNames, rowNames } from '#/game/Board/constants';
-import { BoardWrapper } from '#/game/Board/styled';
+import { CreateBoardBackground, CreateBoardCharacters } from '#/modules/Game/Board/BoardHelpers';
+import { BoardDimensions, colNames, rowNames } from '#/modules/Game/Board/constants';
+import { BoardWrapper } from '#/modules/Game/Board/styled';
 import * as React from 'react';
 import 'react-grid-layout/css/styles.css';
 import {
