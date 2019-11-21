@@ -38,6 +38,7 @@ export enum BattleshipEvents {
    OnYourTurn = 'OnYourTurn',
    OnPlayerReady = 'OnPlayerReady',
    OnWin = 'OnWin',
+   onSuccessfulHit = 'onSuccessfulHit',
 }
 
 export interface UserShipsLayout {

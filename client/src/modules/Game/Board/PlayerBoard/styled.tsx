@@ -1,4 +1,4 @@
-import { BoardGridWrapper } from '#/game/Board/styled';
+import { BoardGridWrapper } from '#/modules/Game/Board/styled';
 import styled from 'styled-components';
 
 export const BoardWrapper = styled.div`

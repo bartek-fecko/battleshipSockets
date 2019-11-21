@@ -7,5 +7,6 @@ var BattleshipEvents;
     BattleshipEvents["OnYourTurn"] = "OnYourTurn";
     BattleshipEvents["OnPlayerReady"] = "OnPlayerReady";
     BattleshipEvents["OnWin"] = "OnWin";
+    BattleshipEvents["onSuccessfulHit"] = "onSuccessfulHit";
 })(BattleshipEvents = exports.BattleshipEvents || (exports.BattleshipEvents = {}));
 exports.numberOfShipPoints = 13;

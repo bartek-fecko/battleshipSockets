@@ -52,6 +52,7 @@ export class BattleshipGame {
             if (this.checkHit(message.x, message.y)) {
                enemyPlayer.hitsLeft--;
                enemyPlayer.socket.emit(BattleshipEvents.OnReceiveAttack, message);
+               currentPlayer.socket.emit(BattleshipEvents.onSuccessfulHit, message);
                currentPlayer.socket.emit(BattleshipEvents.OnYourTurn);
             } else {
                enemyPlayer.socket.emit(BattleshipEvents.OnReceiveAttack, message);

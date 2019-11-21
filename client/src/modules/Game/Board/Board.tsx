@@ -2,7 +2,13 @@ import { appVariables } from '#/config/appConstants';
 import WinnerModal from '#/modules/WinnerModal/WinnerModal';
 import * as React from 'react';
 import 'react-grid-layout/css/styles.css';
-import { BattleshipEvents, OnRecieveAttackMsg, OnWin, ReactGridLayout } from './constants';
+import {
+   BattleshipEvents,
+   OnRecieveAttackMsg,
+   OnSuccessfulHit,
+   OnWin,
+   ReactGridLayout,
+} from './constants';
 import EnemyBoard from './EnemyBoard/EnemyBoard';
 import PlayerBoard from './PlayerBoard/PlayerBoard';
 import {
@@ -24,23 +30,32 @@ const Board: React.FC = () => {
       socket.emit(BattleshipEvents.OnPlayerReady, shipsLayout);
    };
 
+   const getField = (x: number, y: number, board: HTMLElement) => (
+      board.querySelectorAll(`[data-row="${y}"]`)[x]
+   );
+
    const onFieldClick = (e: React.MouseEvent<HTMLElement>) => {
       const x = Number((e.target as HTMLElement).dataset.col);
       const y = Number((e.target as HTMLElement).dataset.row);
       if (myTurn) {
          socket.emit(BattleshipEvents.OnAttack, { x, y });
          if (enemyBoardRef) {
-            const row = enemyBoardRef.current.querySelectorAll(`[data-row="${y}"]`);
-            const target = row[x] as HTMLElement;
+            const target = getField(x, y, enemyBoardRef.current) as HTMLElement;
             if (target.dataset.wasClicked) {
                return;
             }
             target.dataset.wasClicked = 'true';
-            target.style.background = 'red';
+            target.style.background = '#eee';
+            target.style.cursor = 'auto';
             setMyTurn(false);
          }
       }
    };
+
+   socket.on(BattleshipEvents.onSuccessfulHit, ({ x, y }: OnSuccessfulHit) => {
+      const target = getField(x, y, enemyBoardRef.current) as HTMLElement;
+      (target.style as unknown as string) = 'background: red;';
+   });
 
    socket.on(BattleshipEvents.OnYourTurn, () => {
       setMyTurn(true);
@@ -48,8 +63,7 @@ const Board: React.FC = () => {
 
    socket.on(BattleshipEvents.OnReceiveAttack, (message: OnRecieveAttackMsg) => {
       if (message && playerBoardRef) {
-         const row = playerBoardRef.current.querySelectorAll(`[data-row="${message.y}"]`);
-         const target = row[message.x] as HTMLElement;
+         const target = getField(message.x, message.y, playerBoardRef.current) as HTMLElement;
          (target.style as unknown as string) = 'background: red; z-index: 1';
       }
    });

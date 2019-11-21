@@ -33,6 +33,11 @@ export interface OnWin {
    };
 }
 
+export interface OnSuccessfulHit {
+   x: number;
+   y: number;
+}
+
 export const notReadyToPlayMessage = 'To start game, arrange your ships and press start button.';
 
 export enum BattleshipEvents {
@@ -41,6 +46,7 @@ export enum BattleshipEvents {
    OnYourTurn = 'OnYourTurn',
    OnPlayerReady = 'OnPlayerReady',
    OnWin = 'OnWin',
+   onSuccessfulHit = 'onSuccessfulHit',
 }
 
 export const shipsInitialLayout = [
